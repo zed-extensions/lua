@@ -27,13 +27,26 @@ impl LuaExtension {
             language_server_id,
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
         );
-        let release = zed::latest_github_release(
+
+        let release = match zed::latest_github_release(
             "LuaLS/lua-language-server",
             zed::GithubReleaseOptions {
                 require_assets: true,
                 pre_release: false,
             },
-        )?;
+        ) {
+            Ok(release) => release,
+            Err(_) => {
+                if let Some(path) = &self.cached_binary_path {
+                    if fs::metadata(path).map_or(false, |stat| stat.is_file()) {
+                        return Ok(path.clone());
+                    }
+                }
+                return Err(
+                    "Failed to fetch latest release and no cached binary path available".into(),
+                );
+            }
+        };
 
         let (platform, arch) = zed::current_platform();
         let asset_name = format!(
