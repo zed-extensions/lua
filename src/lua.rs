@@ -36,7 +36,14 @@ impl LuaExtension {
             },
         ) {
             Ok(release) => release,
-            Err(_) => {
+            Err(e) => {
+                zed::set_language_server_installation_status(
+                    language_server_id,
+                    &zed::LanguageServerInstallationStatus::Failed(format!(
+                        "Could not check for updates: {}. Using existing version.",
+                        e
+                    )),
+                );
                 if let Some(path) = &self.cached_binary_path {
                     if fs::metadata(path).map_or(false, |stat| stat.is_file()) {
                         return Ok(path.clone());
