@@ -12,4 +12,4 @@ language = "Lua"
 
 [grammars.lua]
 repository = "https://github.com/tree-sitter-grammars/tree-sitter-lua"
-commit = "a24dab177e58c9c6832f96b9a73102a0cfbced4a"
+commit = "4569d1c361129e71a205b94a05e158bd71b1709f"
