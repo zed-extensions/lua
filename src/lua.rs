@@ -1,22 +1,35 @@
 use std::fs;
-use zed::lsp::CompletionKind;
-use zed::{CodeLabel, CodeLabelSpan, LanguageServerId};
-use zed_extension_api::{self as zed, Result};
+use zed_extension_api::{
+    self as zed, lsp::CompletionKind, settings::LspSettings, CodeLabel, CodeLabelSpan,
+    LanguageServerId, LanguageServerInstallationStatus, Result,
+};
+
+struct LuaBinary {
+    path: String,
+    args: Option<Vec<String>>,
+}
 
 struct LuaExtension {
     cached_binary_path: Option<String>,
 }
 
 impl LuaExtension {
-    fn language_server_binary_path(
+    fn language_server_binary(
         &mut self,
         language_server_id: &LanguageServerId,
         worktree: &zed::Worktree,
-    ) -> Result<String> {
-        if let Some(path) = worktree.which("lua-language-server") {
-            return Ok(path);
-        }
+    ) -> Result<LuaBinary> {
+        let settings = LspSettings::for_worktree(language_server_id.as_ref(), worktree);
+        let binary = settings.ok().and_then(|settings| settings.binary);
+        let args = binary.as_ref().and_then(|binary| binary.arguments.clone());
+        let path = binary
+            .and_then(|binary| binary.path)
+            .or_else(|| worktree.which("lua-language-server"))
+            .unwrap_or(self.zed_managed_binary_path(language_server_id)?);
+        Ok(LuaBinary { path, args })
+    }
 
+    fn zed_managed_binary_path(&mut self, language_server_id: &LanguageServerId) -> Result<String> {
         if let Some(path) = &self.cached_binary_path {
             if fs::metadata(path).map_or(false, |stat| stat.is_file()) {
                 return Ok(path.clone());
@@ -113,10 +126,11 @@ impl zed::Extension for LuaExtension {
         language_server_id: &LanguageServerId,
         worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
+        let lua_binary = self.language_server_binary(language_server_id, worktree)?;
         Ok(zed::Command {
-            command: self.language_server_binary_path(language_server_id, worktree)?,
-            args: Default::default(),
-            env: Default::default(),
+            command: lua_binary.path,
+            args: lua_binary.args.unwrap_or_else(|| vec![]),
+            env: vec![],
         })
     }
 
