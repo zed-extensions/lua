@@ -1,12 +1,9 @@
 ;; Injections for Lua code
 
 ;; LuaCats Doc comments injection
-;; Inject --- comments as LuaCats language
-;; The emmyluadoc grammar now supports --- prefix, so we can directly inject
-((comment
-  (comment_content) @injection.content)
- (#match? @injection.content "^-")
- (#set! injection.language "emmyluadoc"))
+(((comment) @_emmyluadoc_comment
+  (#match? @_emmyluadoc_comment "^---")) @injection.content
+  (#set! injection.language "emmyluadoc"))
 
 ;; LuaJIT FFI C code injection
 ((function_call

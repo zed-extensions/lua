@@ -1,24 +1,16 @@
 ; Highlights query for EmmyLuaDoc
-; Query file for syntax highlighting
 
-; ============================================
-; Lua comment prefix (Comment Prefix)
-; ============================================
-
+; Comment Prefix
 (comment_prefix) @comment
 
-; ============================================
-; Annotation keywords (Annotation Keywords)
-; ============================================
-
-; Match annotation tags using anonymous nodes
+; Annotation Keywords
 "@class" @keyword
+"@interface" @keyword
 "@field" @keyword
 "@type" @keyword
 "@param" @keyword
 "@return" @keyword
 "@generic" @keyword
-"@vararg" @keyword
 "@overload" @keyword
 "@see" @keyword
 "@alias" @keyword
@@ -28,8 +20,16 @@
 "@version" @keyword
 "@diagnostic" @keyword
 "@operator" @keyword
+"@namespace" @keyword
+"@using" @keyword
+"@language" @keyword
+"@attribute" @keyword
+"@as" @keyword
 
-; Special annotation nodes (these are text nodes without @ prefix)
+; Other/unknown annotations
+(tag_name) @keyword
+
+; Special annotation nodes
 (deprecated_annotation) @keyword
 (private_annotation) @keyword
 (protected_annotation) @keyword
@@ -38,81 +38,10 @@
 (async_annotation) @keyword
 (nodiscard_annotation) @keyword
 (meta_annotation) @keyword
+(readonly_annotation) @keyword
+(export_annotation) @keyword
 
-; ============================================
-; Type keywords (Type Keywords)
-; ============================================
-
-[
-  "fun"
-  "table"
-] @keyword.type
-
-; ============================================
-; Basic types (Basic Types)
-; ============================================
-
-((identifier) @type.builtin
-  (#match? @type.builtin "^(string|number|integer|boolean|table|function|thread|userdata|nil|any|unknown|self)$"))
-
-; Custom types
-(basic_type
-  (identifier) @type)
-
-; ============================================
-; Class definitions (Class Definitions)
-; ============================================
-
-(class_annotation
-  name: (identifier) @type.definition)
-
-(class_annotation
-  parent: (type_list
-    (type
-      (primary_type
-        (basic_type
-          (identifier) @type)))))
-
-; ============================================
-; Fields and parameters (Fields and Parameters)
-; ============================================
-
-(field_annotation
-  name: (field_name) @variable.member)
-
-(param_annotation
-  name: (param_name) @variable.parameter)
-
-(return_value
-  name: (identifier)? @variable.parameter)
-
-(param_def
-  name: (identifier) @variable.parameter)
-
-; ============================================
-; Generics (Generics)
-; ============================================
-
-(generic_annotation
-  name: (identifier) @type.parameter)
-
-(generic_type
-  base: (identifier) @type)
-
-; ============================================
-; Aliases and enums (Aliases and Enums)
-; ============================================
-
-(alias_annotation
-  name: (identifier) @type.definition)
-
-(enum_annotation
-  name: (identifier) @type.definition)
-
-; ============================================
-; Visibility modifiers (Visibility Modifiers)
-; ============================================
-
+; Visibility modifiers
 [
   "public"
   "private"
@@ -120,10 +49,82 @@
   "package"
 ] @keyword.modifier
 
-; ============================================
-; Operators (Operators)
-; ============================================
+; Type keywords
+[
+  "fun"
+  "async"
+  "table"
+  "keyof"
+  "typeof"
+  "extends"
+  "in"
+  "and"
+  "or"
+] @keyword.type
 
+; Identifiers
+(identifier) @variable
+
+; Types
+(basic_type
+  (identifier) @type)
+
+; Built-in types
+((identifier) @type.builtin
+  (#match? @type.builtin "^(string|number|integer|boolean|table|function|thread|userdata|nil|any|unknown|self)$"))
+
+; Class definitions
+(class_annotation
+  name: (identifier) @type.definition)
+
+; Class parent types
+(class_annotation
+  parent: (type_list
+    (type
+      (primary_type
+        (basic_type
+          (identifier) @type)))))
+
+; Class modifiers
+(class_annotation
+  [
+    "exact"
+    "partial"
+    "constructor"
+  ] @keyword.modifier)
+
+; Fields and Parameters
+(field_annotation
+  name: (field_name) @variable.member)
+
+(param_annotation
+  name: (param_name) @variable.parameter)
+
+(param_def
+  name: (identifier) @variable.parameter)
+
+; Generics
+(generic_annotation
+  name: (identifier) @type.parameter)
+
+(generic_type
+  base: (identifier) @type)
+
+(generic_params
+  params: (identifier) @type.parameter)
+
+; Aliases and Enums
+(alias_annotation
+  name: (identifier) @type.definition)
+
+(enum_annotation
+  name: (identifier) @type.definition)
+
+; Enum modifiers
+(enum_annotation
+  "key" @keyword.modifier)
+
+; Operators
 [
   "call"
   "add" "sub" "mul" "div" "mod" "pow"
@@ -132,32 +133,38 @@
   "eq" "lt" "le"
   "unm"
   "bnot" "band" "bor" "bxor" "shl" "shr"
+  "index"
 ] @operator
 
-; ============================================
-; Literals (Literals)
-; ============================================
-
+; Literals
 (string) @string
-
 (number) @number
-
 (boolean) @boolean
+"nil" @constant.builtin
 
-; ============================================
-; Punctuation (Punctuation)
-; ============================================
+; Template types
+(template_chars) @string
 
+; Text line (documentation text)
+(text_line) @comment
+
+; Description
+(description) @comment
+
+; Other annotation description (highlight differently for visibility)
+(other_annotation
+  description: (description) @string.documentation)
+
+; Continuation description
+(continuation_description) @comment
+
+; Punctuation
 [
   ":"
   "|"
   ","
   "?"
 ] @punctuation.delimiter
-
-; '|' in type continuation
-(type_continuation
-  "|" @punctuation.delimiter)
 
 [
   "("
@@ -166,28 +173,23 @@
   "]"
   "<"
   ">"
+  "{"
+  "}"
 ] @punctuation.bracket
 
-; ============================================
-; Tuple types (Tuple Types)
-; ============================================
+; Function type
+(function_type
+  "fun" @keyword.function)
 
-; Tuple brackets
-(tuple_type
-  "[" @punctuation.bracket
-  "]" @punctuation.bracket)
+; Table type
+(table_type
+  "table" @type.builtin)
 
-; Commas in tuple elements
-(tuple_elements
-  "," @punctuation.delimiter)
+; Table fields
+(table_field
+  name: (identifier) @property)
 
-; ============================================
-; References and diagnostics (References and Diagnostics)
-; ============================================
-
-(see_annotation
-  reference: (identifier) @variable)
-
+; Diagnostic actions
 (diagnostic_annotation
   action: [
     "disable"
@@ -199,85 +201,40 @@
 (diagnostic_list
   (identifier) @constant)
 
-; ============================================
-; Module names (Module Names)
-; ============================================
+; Attributes
+(attribute_use_item
+  name: (identifier) @function.macro)
 
+(attribute_annotation
+  name: (identifier) @function.macro)
+
+; Module names
 (module_annotation
   name: (string) @module)
 
-; ============================================
-; Version (Version)
-; ============================================
-
+; Version
 (version_annotation
   version: [
     (identifier) @constant
     (string) @string
+    (version_range) @constant
   ])
 
-; ============================================
-; Array type markers (Array Type Markers)
-; ============================================
+; See references
+(see_annotation
+  reference: (identifier) @variable)
 
-(array_type
-  "[" @punctuation.bracket
-  "]" @punctuation.bracket)
+; Namespace
+(namespace_annotation
+  name: (identifier) @namespace)
 
-; ============================================
-; Function types (Function Types)
-; ============================================
+; Using
+(using_annotation
+  path: [
+    (identifier) @namespace
+    (string) @string
+  ])
 
-(function_type
-  "fun" @keyword.function
-  ":" @punctuation.delimiter)
-
-; ============================================
-; Table types (Table Types)
-; ============================================
-
-(table_type
-  "table" @type.builtin)
-
-; Table literal types (Table Literal Types)
-(table_literal_type
-  "{" @punctuation.bracket
-  "}" @punctuation.bracket)
-
-; Named fields
-(table_field
-  name: (identifier) @property
-  ":" @punctuation.delimiter
-  type: (type_list
-    (type
-      (primary_type
-        (basic_type
-          (identifier) @type)))))
-
-; Index fields
-(table_field
-  "[" @punctuation.bracket
-  "]" @punctuation.bracket
-  ":" @punctuation.delimiter)
-
-; Commas in table fields
-(table_literal_type
-  "," @punctuation.delimiter)
-
-; ============================================
-; Generic parameters (Generic Parameters)
-; ============================================
-
-; Generic parameter definitions for @class and @alias
-(generic_params
-  "<" @punctuation.bracket
-  ">" @punctuation.bracket)
-
-(generic_params
-  params: (identifier) @type.parameter)
-
-; ============================================
-; nil literal (nil Literal)
-; ============================================
-
-"nil" @constant.builtin
+; Language
+(language_annotation
+  language: (identifier) @constant)
