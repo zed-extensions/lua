@@ -185,11 +185,8 @@ impl zed::Extension for LuaExtension {
         server_id: &zed_extension_api::LanguageServerId,
         worktree: &zed_extension_api::Worktree,
     ) -> zed_extension_api::Result<Option<zed_extension_api::serde_json::Value>> {
-        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
-            .ok()
-            .and_then(|lsp_settings| lsp_settings.initialization_options.clone())
-            .unwrap_or_default();
-        Ok(Some(settings))
+        LspSettings::for_worktree(server_id.as_ref(), worktree)
+            .map(|lsp_settings| lsp_settings.initialization_options.clone())
     }
 
     fn language_server_workspace_configuration(
@@ -197,11 +194,8 @@ impl zed::Extension for LuaExtension {
         server_id: &zed_extension_api::LanguageServerId,
         worktree: &zed_extension_api::Worktree,
     ) -> zed_extension_api::Result<Option<zed_extension_api::serde_json::Value>> {
-        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
-            .ok()
-            .and_then(|lsp_settings| lsp_settings.settings.clone())
-            .unwrap_or_default();
-        Ok(Some(settings))
+        LspSettings::for_worktree(server_id.as_ref(), worktree)
+            .map(|lsp_settings| lsp_settings.settings.clone())
     }
 }
 
