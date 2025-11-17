@@ -1,2 +1,3 @@
 name = "EmmyLuadoc"
 grammar = "emmyluadoc"
+hidden = true
