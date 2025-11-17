@@ -8,8 +8,12 @@ repository = "https://github.com/zed-extensions/lua"
 
 [language_servers.lua-language-server]
 name = "LuaLS"
-language = "Lua"
+languages = ["Lua", "EmmyLuadoc"]
 
 [grammars.lua]
 repository = "https://github.com/tree-sitter-grammars/tree-sitter-lua"
-commit = "a24dab177e58c9c6832f96b9a73102a0cfbced4a"
+commit = "d76023017f7485eae629cb60d406c7a1ca0f40c9"
+
+[grammars.emmyluadoc]
+repository = "https://github.com/EmmyLuaLs/tree-sitter-emmyluadoc"
+commit = "ea755c0fd34c07e16597bd62a404d6eba2a3891e"
