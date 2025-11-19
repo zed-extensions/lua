@@ -36,9 +36,9 @@ jobs:
           bump2version --verbose ${{ github.event.inputs.version_bump }} --current-version "$OLD_VERSION" Cargo.toml extension.toml
           NEW_VERSION="$(cat Cargo.toml| sed -n 's/version = \"\(.*\)\"/\1/p')"
 
-          export GIT_COMMITTER_NAME="Zed Bot"
+          export GIT_COMMITTER_NAME="Zed Zippy"
           export GIT_COMMITTER_EMAIL="hi@zed.dev"
-          git commit -am "Bump to $output for @$GITHUB_ACTOR" --author "Zed Bot <hi@zed.dev>"
+          git commit -am "Bump to $output for @$GITHUB_ACTOR" --author "Zed Zippy <hi@zed.dev>"
           git push origin HEAD:v${NEW_VERSION}
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
