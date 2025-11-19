@@ -33,7 +33,7 @@ jobs:
         id: bump_version
         run: |
           OLD_VERSION="$(cat Cargo.toml| sed -n 's/version = \"\(.*\)\"/\1/p')"
-          bump2version --dry-run --verbose ${{ github.event.inputs.version_bump }} --current-version "$OLD_VERSION" Cargo.toml extension.toml
+          bump2version --verbose ${{ github.event.inputs.version_bump }} --current-version "$OLD_VERSION" Cargo.toml extension.toml
           NEW_VERSION="$(cat Cargo.toml| sed -n 's/version = \"\(.*\)\"/\1/p')"
 
           export GIT_COMMITTER_NAME="Zed Bot"
@@ -50,6 +50,6 @@ jobs:
           title: "Bump version to ${{ steps.bump_cargo.outputs.new_version }}"
           body: |
             Bump to v${{ steps.bump_cargo.outputs.new_version }}
-          branch: v${{ github.event.inputs.extension_name }}
+          branch: v${{ steps.bump_cargo.outputs.new_version }}
           base: main
           delete-branch: true
