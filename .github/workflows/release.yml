@@ -1,0 +1,55 @@
+name: Bump Extension Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: "Version bump type"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump_version:
+    if: github.repository_owner == 'zed-extensions'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install bump2version
+        run: pip install bump2version
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          OLD_VERSION="$(cat Cargo.toml| sed -n 's/version = \"\(.*\)\"/\1/p')"
+          bump2version --verbose ${{ github.event.inputs.version_bump }} --current-version "$OLD_VERSION" Cargo.toml extension.toml
+          NEW_VERSION="$(cat Cargo.toml| sed -n 's/version = \"\(.*\)\"/\1/p')"
+
+          export GIT_COMMITTER_NAME="Zed Zippy"
+          export GIT_COMMITTER_EMAIL="hi@zed.dev"
+          git commit -am "Bump to $output for @$GITHUB_ACTOR" --author "Zed Zippy <hi@zed.dev>"
+          git push origin HEAD:v${NEW_VERSION}
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Bump to v${{ steps.bump_cargo.outputs.new_version }}"
+          title: "Bump version to ${{ steps.bump_cargo.outputs.new_version }}"
+          body: |
+            Bump to v${{ steps.bump_cargo.outputs.new_version }}
+          branch: v${{ steps.bump_cargo.outputs.new_version }}
+          base: main
+          delete-branch: true
