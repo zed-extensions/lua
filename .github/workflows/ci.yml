@@ -1,0 +1,13 @@
+name: run_tests
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - main
+jobs:
+  run-extension-tests:
+    uses: zed-industries/zed/.github/workflows/extension_tests.yml@main
+    with:
+      run_tests: true
