@@ -11,5 +11,5 @@ jobs:
     with:
       run_tests: false
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.ref_name == 'main' && github.sha || 'anyshapr' }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.ref_name == 'main' && github.sha || 'anysha' }}pr
   cancel-in-progress: true
