@@ -4,6 +4,7 @@
 (for_statement "end" @end) @indent
 (repeat_statement "until" @end) @indent
 (function_declaration "end" @end) @indent
+(function_definition "end" @end) @indent
 
 (_ "[" "]" @end) @indent
 (_ "{" "}" @end) @indent
