@@ -31,7 +31,7 @@ impl LuaExtension {
 
     fn zed_managed_binary_path(&mut self, language_server_id: &LanguageServerId) -> Result<String> {
         if let Some(path) = &self.cached_binary_path {
-            if fs::metadata(path).map_or(false, |stat| stat.is_file()) {
+            if fs::metadata(path).is_ok_and(|stat| stat.is_file()) {
                 return Ok(path.clone());
             }
         }
@@ -72,7 +72,7 @@ impl LuaExtension {
             .assets
             .iter()
             .find(|asset| asset.name == asset_name)
-            .ok_or_else(|| format!("no asset found matching {:?}", asset_name))?;
+            .ok_or_else(|| format!("no asset found matching {asset_name:?}"))?;
 
         let version_dir = format!("lua-language-server-{}", release.version);
         let binary_path = format!(
@@ -83,7 +83,7 @@ impl LuaExtension {
             },
         );
 
-        if !fs::metadata(&binary_path).map_or(false, |stat| stat.is_file()) {
+        if !fs::metadata(&binary_path).is_ok_and(|stat| stat.is_file()) {
             zed::set_language_server_installation_status(
                 language_server_id,
                 &zed::LanguageServerInstallationStatus::Downloading,
@@ -129,7 +129,7 @@ impl zed::Extension for LuaExtension {
         let lua_binary = self.language_server_binary(language_server_id, worktree)?;
         Ok(zed::Command {
             command: lua_binary.path,
-            args: lua_binary.args.unwrap_or_else(|| vec![]),
+            args: lua_binary.args.unwrap_or_else(std::vec::Vec::new),
             env: vec![],
         })
     }
