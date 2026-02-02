@@ -5,6 +5,10 @@
   (#match? @_emmyluadoc_comment "^---")) @injection.content
   (#set! injection.language "emmyluadoc"))
 
+;; Add support for TODO, FIXME, HACK, etc with the "comment" extension
+((comment) @injection.content
+  (#set! injection.language "comment"))
+
 ;; LuaJIT FFI C code injection
 ((function_call
   name: [
