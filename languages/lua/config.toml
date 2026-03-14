@@ -12,3 +12,12 @@ brackets = [
     { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
 ]
 collapsed_placeholder = "--[ ... ]--"
+
+# Fallback indent rules to complement tree-sitter.
+# Handle incomplete structures (e.g. before typing `end`).
+increase_indent_pattern = "^\\s*(if|elseif|else|do|while|for|repeat|((local|global)\\s+)?function|.+=\\s*function|.*[,(]\\s*function)\\b"
+
+# Fallback outdent rules to complement tree-sitter.
+# Fix `elseif` / `else` handling, and outdent `end` / `until` even when the structure is incomplete.
+# Avoids relying on `valid_after` contexts, which depend on tree-sitter queries (`@start.*` captures).
+decrease_indent_pattern = "^\\s*(elseif|else|end|until)\\b"
