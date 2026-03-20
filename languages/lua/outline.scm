@@ -1,3 +1,3 @@
 (function_declaration
-    "function" @context
-    name: (_) @name) @item
+  "function" @context
+  name: (_) @name) @item
