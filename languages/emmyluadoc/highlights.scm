@@ -1,29 +1,48 @@
 ; Highlights query for EmmyLuaDoc
-
 ; Comment Prefix
 (comment_prefix) @comment
 
 ; Annotation Keywords
 "@class" @keyword
+
 "@interface" @keyword
+
 "@field" @keyword
+
 "@type" @keyword
+
 "@param" @keyword
+
 "@return" @keyword
+
 "@generic" @keyword
+
 "@overload" @keyword
+
 "@see" @keyword
+
 "@alias" @keyword
+
 "@enum" @keyword
+
 "@module" @keyword
+
 "@cast" @keyword
+
 "@version" @keyword
+
 "@diagnostic" @keyword
+
 "@operator" @keyword
+
 "@namespace" @keyword
+
 "@using" @keyword
+
 "@language" @keyword
+
 "@attribute" @keyword
+
 "@as" @keyword
 
 ; Other/unknown annotations
@@ -31,14 +50,23 @@
 
 ; Special annotation nodes
 (deprecated_annotation) @keyword
+
 (private_annotation) @keyword
+
 (protected_annotation) @keyword
+
 (public_annotation) @keyword
+
 (package_annotation) @keyword
+
 (async_annotation) @keyword
+
 (nodiscard_annotation) @keyword
+
 (meta_annotation) @keyword
+
 (readonly_annotation) @keyword
+
 (export_annotation) @keyword
 
 ; Visibility modifiers
@@ -71,7 +99,8 @@
 
 ; Built-in types
 ((identifier) @type.builtin
-  (#match? @type.builtin "^(string|number|integer|boolean|table|function|thread|userdata|nil|any|unknown|self)$"))
+  (#match? @type.builtin
+    "^(string|number|integer|boolean|table|function|thread|userdata|nil|any|unknown|self)$"))
 
 ; Class definitions
 (class_annotation
@@ -127,19 +156,34 @@
 ; Operators
 [
   "call"
-  "add" "sub" "mul" "div" "mod" "pow"
+  "add"
+  "sub"
+  "mul"
+  "div"
+  "mod"
+  "pow"
   "concat"
   "len"
-  "eq" "lt" "le"
+  "eq"
+  "lt"
+  "le"
   "unm"
-  "bnot" "band" "bor" "bxor" "shl" "shr"
+  "bnot"
+  "band"
+  "bor"
+  "bxor"
+  "shl"
+  "shr"
   "index"
 ] @operator
 
 ; Literals
 (string) @string
+
 (number) @number
+
 (boolean) @boolean
+
 "nil" @constant.builtin
 
 ; Template types
