@@ -10,6 +10,7 @@
   "if"
   "in"
   "local"
+  "global"
   "repeat"
   "return"
   "then"

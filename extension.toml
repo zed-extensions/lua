@@ -12,7 +12,7 @@ languages = ["Lua", "EmmyLuadoc"]
 
 [grammars.lua]
 repository = "https://github.com/tree-sitter-grammars/tree-sitter-lua"
-commit = "d76023017f7485eae629cb60d406c7a1ca0f40c9"
+commit = "10fe0054734eec83049514ea2e718b2a56acd0c9" # v0.5.0
 
 [grammars.emmyluadoc]
 repository = "https://github.com/EmmyLuaLs/tree-sitter-emmyluadoc"
