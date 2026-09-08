@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> Remove this line to confirm you've reviewed this PR before submitting.
+
 # Zed Lua
 
 A [Lua](https://www.lua.org/) extension for [Zed](https://zed.dev).
