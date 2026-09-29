@@ -10,4 +10,5 @@ path = "src/lua.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
+semver = "1.0"
 zed_extension_api = "0.7.0"
