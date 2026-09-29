@@ -1,5 +1,10 @@
 ; Keywords
 [
+  "local"
+  "global"
+] @keyword
+
+[
   "do"
   "else"
   "elseif"
@@ -9,15 +14,13 @@
   "goto"
   "if"
   "in"
-  "local"
-  "global"
   "repeat"
   "return"
   "then"
   "until"
   "while"
   (break_statement)
-] @keyword
+] @keyword.control
 
 ; Operators
 [
