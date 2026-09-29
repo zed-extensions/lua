@@ -744,7 +744,7 @@ dependencies = [
 
 [[package]]
 name = "zed_lua"
-version = "0.1.10"
+version = "0.1.11"
 dependencies = [
  "zed_extension_api",
 ]
